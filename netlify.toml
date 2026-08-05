@@ -1,0 +1,3 @@
+[build]
+  publish = "quiznova-x"
+  functions = "netlify/functions"

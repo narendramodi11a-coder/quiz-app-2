@@ -6,7 +6,6 @@
 import { CONFIG } from "./config.js";
 import { parseAIJSON } from "./utils.js";
 
-const GEMINI_API_KEY = "";
 const GEMINI_MODEL = CONFIG.GEMINI_MODEL || "gemini-2.5-flash";
 
 // ---- Call the server API endpoint for Gemini ----
@@ -69,7 +68,6 @@ function isGeminiConfigured() {
 }
 
 export {
-  GEMINI_API_KEY,
   GEMINI_MODEL,
   callGemini,
   buildPrompt,
