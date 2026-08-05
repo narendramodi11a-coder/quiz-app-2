@@ -9,6 +9,7 @@ app.use(express.json({ limit: '10mb' }));
 
 const staticPath = path.join(process.cwd(), 'quiznova-x');
 app.use(express.static(staticPath));
+app.use('/src/assets', express.static(path.join(process.cwd(), 'src/assets')));
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });
@@ -62,5 +63,5 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`QuizNova X server running on http://0.0.0.0:${PORT}`);
+  console.log(`MindForge server running on http://0.0.0.0:${PORT}`);
 });

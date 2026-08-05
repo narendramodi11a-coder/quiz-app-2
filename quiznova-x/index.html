@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QuizNova X</title>
+  <title>MindForge</title>
 
   <!-- Favicon placeholder -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
@@ -32,8 +32,10 @@
   <!-- ============ SIDEBAR ============ -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
-      <span class="sidebar-logo"><i class="fa-solid fa-bolt"></i></span>
-      <span class="sidebar-title">QuizNova X</span>
+      <span class="sidebar-logo">
+        <img src="/assets/logo.jpg" alt="MindForge Logo" referrerpolicy="no-referrer" style="width:28px;height:28px;border-radius:8px;object-fit:cover;box-shadow:0 0 10px rgba(200,161,90,0.35);">
+      </span>
+      <span class="sidebar-title">MindForge</span>
     </div>
     <nav class="sidebar-nav">
       <a class="nav-item active" href="#" data-view="home"><i class="fa-solid fa-house"></i><span>Home</span></a>
@@ -71,9 +73,9 @@
           <span class="search-btn-hint">Search</span>
           <kbd class="search-btn-kbd">Ctrl K</kbd>
         </button>
-        <div class="profile-mini">
-          <img class="avatar" src="https://api.dicebear.com/7.x/initials/svg?seed=MK" alt="Profile avatar">
-          <span class="profile-mini-name">Medhansh</span>
+        <div class="profile-mini" id="topbarProfile">
+          <div id="topbarAvatar" style="display:inline-flex;align-items:center;justify-content:center;"></div>
+          <span class="profile-mini-name">Learner</span>
         </div>
         <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
           <i class="fa-solid fa-moon"></i>
@@ -86,7 +88,7 @@
 
       <section id="view-home" class="view active">
         <div class="home-hero">
-          <h2>Welcome to QuizNova X</h2>
+          <h2>Welcome to MindForge</h2>
           <p>Your AI-powered quiz and study companion. Learn smarter, remember longer.</p>
           <div class="hero-actions">
             <button class="btn btn-primary"><i class="fa-solid fa-bolt"></i> Create Quiz</button>

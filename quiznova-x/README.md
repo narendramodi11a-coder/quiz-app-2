@@ -1,4 +1,4 @@
-# QuizNova X
+# MindForge
 
 An AI-powered quiz and study platform. Generate quizzes, flashcards, mind maps, roadmaps and more — all from your own study material, powered by Google Gemini.
 

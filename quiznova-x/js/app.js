@@ -23,6 +23,7 @@ import { renderSummarizer } from "./summarizer.js";
 import { renderMindmap } from "./mindmap.js";
 import { renderSkilltree } from "./skilltree.js";
 import { initSearch } from "./search.js";
+import { MINDFORGE_LOGO_SVG, getAvatarHTML, openAvatarCustomizerModal, openCardCustomizerModal, updateGlobalAvatars, applyCardStyles } from "./branding.js";
 
 // ---- View registry ----
 const VIEW_TITLES = {
@@ -85,6 +86,8 @@ async function init() {
     applyReducedMotion();
     applyFontSize();
     applyAccentColor();
+    applyCardStyles();
+    updateGlobalAvatars();
     initSearch();
     renderView("home");
   } catch (err) {
@@ -408,26 +411,30 @@ function renderProfile() {
   const titles = Gamification.getTitleGallery();
 
   view.innerHTML = `
-    <div class="profile-header">
-      <div id="profileAvatar" class="avatar avatar-xl" style="width:96px;height:96px;font-size:3rem;display:flex;align-items:center;justify-content:center;background:var(--card-bg);border:3px solid var(--primary);">${p.avatar}</div>
-      <div style="flex:1;min-width:220px;">
-        <div class="profile-name">${Utils.escapeHTML(p.name)}</div>
-        <div class="profile-handle">${Utils.escapeHTML(p.title)} · Level ${p.level}</div>
-        <div style="margin-top:14px;max-width:420px;">
-          <label class="label" for="profileName">Display name</label>
-          <input class="input" id="profileName" value="${Utils.escapeAttr(p.name)}" maxlength="30" autocomplete="off">
+    <div class="profile-header card" style="display:flex;flex-wrap:wrap;gap:20px;align-items:center;margin-bottom:20px;">
+      <div id="profileAvatarContainer" style="cursor:pointer;" title="Click to change avatar">
+        ${getAvatarHTML(p, 88)}
+      </div>
+      <div style="flex:1;min-width:240px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+          <div>
+            <div class="profile-name" style="font-size:1.4rem;font-weight:700;">${Utils.escapeHTML(p.name)}</div>
+            <div class="profile-handle" style="color:var(--text-muted);font-size:.9rem;">${Utils.escapeHTML(p.title)} · Level ${p.level}</div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn btn-primary btn-sm" id="btnEditAvatarFull"><i class="fa-solid fa-user-gear"></i> Customize Avatar</button>
+            <button class="btn btn-ghost btn-sm" id="btnProfileCardCust"><i class="fa-solid fa-sliders"></i> Card Style</button>
+          </div>
         </div>
-        <div style="margin-top:10px;max-width:420px;">
-          <label class="label" for="profileGoal">Learning goal</label>
-          <input class="input" id="profileGoal" value="${Utils.escapeAttr(p.goal)}" maxlength="80" autocomplete="off">
-        </div>
-        <div style="margin-top:12px;">
-          <span class="label">Avatar</span>
-          <div style="display:flex;flex-wrap:wrap;gap:6px;">
-            ${AVATAR_EMOJIS.map(
-              (e) =>
-                `<button type="button" class="avatar-option" data-avatar="${e}" aria-label="Choose avatar" style="width:44px;height:44px;font-size:1.4rem;border-radius:10px;border:2px solid var(--border);background:var(--bg);cursor:pointer;">${e}</button>`
-            ).join("")}
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;">
+          <div>
+            <label class="label" for="profileName">Display name</label>
+            <input class="input" id="profileName" value="${Utils.escapeAttr(p.name)}" maxlength="30" autocomplete="off">
+          </div>
+          <div>
+            <label class="label" for="profileGoal">Learning goal</label>
+            <input class="input" id="profileGoal" value="${Utils.escapeAttr(p.goal)}" maxlength="80" autocomplete="off">
           </div>
         </div>
       </div>
@@ -488,16 +495,15 @@ function renderProfile() {
     </div>
   `;
 
-  // ---- Editable profile fields ----
+  // ---- Editable profile fields & listeners ----
   const nameInput = view.querySelector("#profileName");
   if (nameInput) {
     nameInput.addEventListener("change", () => {
       p.name = nameInput.value.trim() || "Learner";
       saveState();
+      updateGlobalAvatars();
       view.querySelector(".profile-name").textContent = p.name;
-      const mini = document.querySelector(".profile-mini-name");
-      if (mini) mini.textContent = p.name;
-      UI.showToast("Profile updated.", "success");
+      UI.showToast("Profile name updated.", "success");
     });
   }
 
@@ -510,22 +516,18 @@ function renderProfile() {
     });
   }
 
-  const avatarOptions = view.querySelectorAll("[data-avatar]");
-  const setAvatarActive = (btn, active) => {
-    btn.style.borderColor = active ? "var(--primary)" : "var(--border)";
-    btn.style.background = active ? "var(--active-bg)" : "var(--bg)";
-  };
-  avatarOptions.forEach((btn) => setAvatarActive(btn, btn.dataset.avatar === p.avatar));
-  avatarOptions.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      p.avatar = btn.dataset.avatar;
-      saveState();
-      const av = view.querySelector("#profileAvatar");
-      if (av) av.textContent = p.avatar;
-      avatarOptions.forEach((b) => setAvatarActive(b, b.dataset.avatar === btn.dataset.avatar));
-      UI.showToast("Avatar updated.", "success");
-    });
-  });
+  // Avatar customizer trigger
+  const btnAvatar = view.querySelector("#btnEditAvatarFull");
+  const avatarContainer = view.querySelector("#profileAvatarContainer");
+  const openAvatar = () => openAvatarCustomizerModal(() => renderProfile());
+  if (btnAvatar) btnAvatar.addEventListener("click", openAvatar);
+  if (avatarContainer) avatarContainer.addEventListener("click", openAvatar);
+
+  // Card customizer trigger
+  const btnCard = view.querySelector("#btnProfileCardCust");
+  if (btnCard) {
+    btnCard.addEventListener("click", () => openCardCustomizerModal(() => renderProfile()));
+  }
 
   updateStreakBadge();
 }

@@ -46,7 +46,7 @@ class Mascot {
 
     this.injectStyles();
     this.container.innerHTML = `
-      <div class="mascot" id="mascot" role="status" aria-label="QuizNova study buddy">
+      <div class="mascot" id="mascot" role="status" aria-label="MindForge study buddy">
         <div class="mascot-bubble hidden"><span class="mascot-message"></span></div>
         <div class="mascot-emoji"></div>
       </div>`;

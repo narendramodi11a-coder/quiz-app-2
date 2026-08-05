@@ -6,15 +6,107 @@
 .card {
   background: var(--card-bg);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px;
+  border-radius: var(--card-radius, var(--radius));
+  padding: var(--card-padding, 20px);
   box-shadow: 0 2px 8px var(--shadow);
-  transition: transform var(--transition), box-shadow var(--transition), background-color 0.3s;
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--transition), box-shadow var(--transition), background-color 0.3s, border-color 0.3s;
 }
 
 .card:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 24px var(--shadow);
+}
+
+/* Card Style Variants */
+[data-card-style="gold-accent"] .card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+}
+
+[data-card-style="gold-accent"] .card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary, #C8A15A), transparent);
+  opacity: 0.85;
+}
+
+[data-card-style="stealth-dark"] .card {
+  background: #14171E;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+[data-card-style="glass-elevated"] .card {
+  background: #20242E;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* Card Accent Bar Options */
+[data-card-accent-bar="top-gold"] .card {
+  border-top: 2.5px solid var(--primary, #C8A15A) !important;
+}
+
+[data-card-accent-bar="left-gold"] .card {
+  border-left: 3.5px solid var(--primary, #C8A15A) !important;
+}
+
+[data-card-accent-bar="hover-glow"] .card:hover {
+  box-shadow: 0 8px 24px rgba(200, 161, 90, 0.2), 0 2px 8px var(--shadow);
+  border-color: rgba(200, 161, 90, 0.35);
+}
+
+/* Card Hover Animations */
+[data-card-hover="scale"] .card:hover {
+  transform: scale(1.015);
+}
+
+[data-card-hover="flat"] .card:hover {
+  transform: none;
+}
+
+/* ---- MindForge Avatar & Frames ---- */
+.mindforge-avatar {
+  background: var(--card-bg);
+  border: 2px solid var(--border);
+  transition: border-color 0.3s, box-shadow 0.3s, transform 0.2s;
+  user-select: none;
+}
+
+.mindforge-avatar .avatar-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.mindforge-avatar.frame-gold-anvil {
+  border: 2.5px solid var(--primary, #C8A15A);
+  box-shadow: 0 0 12px rgba(200, 161, 90, 0.25);
+}
+
+.mindforge-avatar.frame-stealth-ring {
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5);
+}
+
+.mindforge-avatar.frame-pulse-glow {
+  border: 2px solid var(--primary, #C8A15A);
+  animation: avatarPulse 2.5s infinite ease-in-out;
+}
+
+@keyframes avatarPulse {
+  0%, 100% { box-shadow: 0 0 6px rgba(200, 161, 90, 0.2); }
+  50% { box-shadow: 0 0 18px rgba(200, 161, 90, 0.5); }
+}
+
+.mindforge-avatar.frame-hexagon {
+  border: 2px solid var(--primary, #C8A15A);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
 }
 
 .card-title {

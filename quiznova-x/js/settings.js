@@ -8,6 +8,7 @@ import { exportData, importData } from "./storage.js";
 import { showToast, confirmAction } from "./ui.js";
 import { escapeHTML, escapeAttr, safeDownload, formatDate } from "./utils.js";
 import { mascot } from "./mascot.js";
+import { openCardCustomizerModal, openAvatarCustomizerModal, applyCardStyles, updateGlobalAvatars } from "./branding.js";
 
 // ---- Local theme application (kept small to avoid a circular import) ----
 function applyTheme() {
@@ -44,6 +45,12 @@ function renderSettings() {
       <div class="view-heading"><h2>Settings</h2></div>
 
       <div class="card" style="margin-bottom:16px;">
+        <div class="card-title"><i class="fa-solid fa-palette" style="color:var(--primary);margin-right:6px;"></i> Card Customization Suite</div>
+        <p class="card-subtitle">Customize card styles, surface themes, border radiuses, density, and hover animations across all views.</p>
+        <button class="btn btn-primary btn-sm" id="btnOpenCardCustomizer"><i class="fa-solid fa-sliders"></i> Customize Cards Layout & Theme</button>
+      </div>
+
+      <div class="card" style="margin-bottom:16px;">
         <div class="card-title">Appearance</div>
         <label style="display:flex;align-items:center;justify-content:space-between;gap:14px;padding:8px 0;cursor:pointer;">
           <span style="font-size:.9rem;">Dark theme</span>
@@ -67,8 +74,8 @@ function renderSettings() {
         </div>
         <label class="label" for="setAccent" style="margin-top:6px;">Accent color</label>
         <div style="display:flex;align-items:center;gap:12px;padding:6px 0;">
-          <input type="color" id="setAccent" value="${escapeAttr(s.accentColor || "#6366F1")}" style="width:44px;height:30px;border:none;background:none;cursor:pointer;">
-          <button class="btn btn-ghost btn-sm" id="setAccentReset">Reset</button>
+          <input type="color" id="setAccent" value="${escapeAttr(s.accentColor || "#C8A15A")}" style="width:44px;height:30px;border:none;background:none;cursor:pointer;">
+          <button class="btn btn-ghost btn-sm" id="setAccentReset">Reset (Warm Gold)</button>
         </div>
       </div>
 
@@ -128,7 +135,7 @@ function renderSettings() {
       </div>
 
       <p style="text-align:center;color:var(--text-muted);font-size:.78rem;margin-top:20px;">
-        QuizNova X · Last exported backup: ${appState.lastExport ? escapeHTML(formatDate(appState.lastExport)) : "never"}
+        MindForge · Last exported backup: ${appState.lastExport ? escapeHTML(formatDate(appState.lastExport)) : "never"}
       </p>
     </div>
   `;
@@ -184,19 +191,31 @@ function renderSettings() {
     });
   });
 
+  const btnCardCust = view.querySelector("#btnOpenCardCustomizer");
+  if (btnCardCust) {
+    btnCardCust.addEventListener("click", () => {
+      openCardCustomizerModal(() => renderSettings());
+    });
+  }
+
   const accentInput = view.querySelector("#setAccent");
-  accentInput.addEventListener("input", () => {
-    s.accentColor = accentInput.value;
-    saveState();
-    applyAccentColor();
-  });
-  view.querySelector("#setAccentReset").addEventListener("click", () => {
-    s.accentColor = "#6366F1";
-    saveState();
-    applyAccentColor();
-    accentInput.value = "#6366F1";
-    showToast("Accent color reset.", "info");
-  });
+  if (accentInput) {
+    accentInput.addEventListener("input", () => {
+      s.accentColor = accentInput.value;
+      saveState();
+      applyAccentColor();
+    });
+  }
+  const btnAccentReset = view.querySelector("#setAccentReset");
+  if (btnAccentReset) {
+    btnAccentReset.addEventListener("click", () => {
+      s.accentColor = "#C8A15A";
+      saveState();
+      applyAccentColor();
+      if (accentInput) accentInput.value = "#C8A15A";
+      showToast("Accent color reset to Warm Gold.", "info");
+    });
+  }
 
   const notifToggle = view.querySelector("#setNotifications");
   notifToggle.addEventListener("change", () => {
@@ -257,7 +276,7 @@ function importFromFile(file) {
     try {
       const ok = importData(String(reader.result || ""));
       if (!ok) {
-        showToast("Import failed. The file does not look like a QuizNova X backup.", "error");
+        showToast("Import failed. The file does not look like a MindForge backup.", "error");
         return;
       }
       loadState();

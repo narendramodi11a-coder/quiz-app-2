@@ -10,6 +10,12 @@ const defaultState = {
   profile: {
     name: "Learner",
     avatar: "🧑‍🎓",
+    avatarType: "preset", // preset | custom | initials | emoji
+    presetAvatar: "gold-pioneer",
+    customAvatar: null, // base64 image data
+    initials: "MF",
+    initialsBg: "gold", // gold | dark | emerald | amethyst
+    avatarFrame: "gold-anvil", // gold-anvil | stealth-ring | pulse-glow | hexagon
     goal: "Study daily",
     level: 1,
     xp: 0,
@@ -32,7 +38,6 @@ const defaultState = {
   titlesUnlocked: ["Beginner Explorer"],
   dailyChallenges: { date: null, goals: [], completed: [] },
   activityLog: [],
-  // ---- Prompt 6/7: analytics & tracking ----
   xpHistory: [], // [{ timestamp, amount, total }] cumulative XP history
   studyMinutes: {}, // { "YYYY-MM-DD": minutes }
   deletedItems: [], // history entries removed for later restore
@@ -45,7 +50,12 @@ const defaultState = {
     soundEnabled: false,
     notifications: true,
     fontSize: "md", // sm | md | lg
-    accentColor: "#6366F1", // --primary override
+    accentColor: "#C8A15A", // --primary Warm Gold default
+    cardStyle: "gold-accent", // default | gold-accent | stealth-dark | glass-elevated
+    cardRadius: "16", // 8 | 12 | 16 | 20
+    cardDensity: "standard", // compact | standard | spacious
+    cardAccentBar: "top-gold", // none | top-gold | left-gold | hover-glow
+    cardHoverAnimation: "lift", // lift | scale | flat
     dailyGoalMinutes: 30,
     shortcutEnabled: true,
   },
