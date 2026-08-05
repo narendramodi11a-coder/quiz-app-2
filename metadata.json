@@ -1,0 +1,6 @@
+{
+  "name": "QuizNova X",
+  "description": "AI-powered quiz and study companion with interactive tools, flashcards, mind maps, and AI tutor.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

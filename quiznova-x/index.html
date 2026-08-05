@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuizNova X</title>
+
+  <!-- Favicon placeholder -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+
+  <!-- Stylesheets: main → themes → components → views → features → responsive -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/themes.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/views.css">
+  <link rel="stylesheet" href="css/features.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <span class="sidebar-logo"><i class="fa-solid fa-bolt"></i></span>
+      <span class="sidebar-title">QuizNova X</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a class="nav-item active" href="#" data-view="home"><i class="fa-solid fa-house"></i><span>Home</span></a>
+      <a class="nav-item" href="#" data-view="profile"><i class="fa-solid fa-user"></i><span>Profile</span></a>
+      <a class="nav-item" href="#" data-view="material"><i class="fa-solid fa-folder-open"></i><span>My Material</span></a>
+      <a class="nav-item" href="#" data-view="notes"><i class="fa-solid fa-note-sticky"></i><span>My Notes</span></a>
+      <a class="nav-item" href="#" data-view="quiz"><i class="fa-solid fa-list-check"></i><span>Create Quiz</span></a>
+      <a class="nav-item" href="#" data-view="flashcards"><i class="fa-solid fa-layer-group"></i><span>Flashcards</span></a>
+      <a class="nav-item" href="#" data-view="roadmap"><i class="fa-solid fa-map"></i><span>Roadmap</span></a>
+      <a class="nav-item" href="#" data-view="tutor"><i class="fa-solid fa-robot"></i><span>AI Tutor</span></a>
+      <a class="nav-item" href="#" data-view="summarizer"><i class="fa-solid fa-file-lines"></i><span>Summarizer</span></a>
+      <a class="nav-item" href="#" data-view="mindmap"><i class="fa-solid fa-diagram-project"></i><span>Mind Maps</span></a>
+      <a class="nav-item" href="#" data-view="skilltree"><i class="fa-solid fa-sitemap"></i><span>Skill Tree</span></a>
+      <a class="nav-item" href="#" data-view="mistakes"><i class="fa-solid fa-book-open"></i><span>Mistake Journal</span></a>
+      <a class="nav-item" href="#" data-view="history"><i class="fa-solid fa-clock-rotate-left"></i><span>History</span></a>
+      <a class="nav-item" href="#" data-view="progress"><i class="fa-solid fa-chart-line"></i><span>Progress</span></a>
+      <a class="nav-item" href="#" data-view="settings"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
+    </nav>
+  </aside>
+  <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+  <!-- ============ MAIN WRAPPER ============ -->
+  <div class="main-wrapper">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <button id="menuBtn" class="hamburger" aria-label="Toggle menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <h1 id="viewTitle">Home</h1>
+      <div class="topbar-right">
+        <span id="streakBadge" class="streak-badge">🔥 0</span>
+        <button id="searchBtn" class="search-btn" aria-label="Search (Ctrl+K)">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <span class="search-btn-hint">Search</span>
+          <kbd class="search-btn-kbd">Ctrl K</kbd>
+        </button>
+        <div class="profile-mini">
+          <img class="avatar" src="https://api.dicebear.com/7.x/initials/svg?seed=MK" alt="Profile avatar">
+          <span class="profile-mini-name">Medhansh</span>
+        </div>
+        <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- App views -->
+    <main id="app">
+
+      <section id="view-home" class="view active">
+        <div class="home-hero">
+          <h2>Welcome to QuizNova X</h2>
+          <p>Your AI-powered quiz and study companion. Learn smarter, remember longer.</p>
+          <div class="hero-actions">
+            <button class="btn btn-primary"><i class="fa-solid fa-bolt"></i> Create Quiz</button>
+            <button class="btn btn-ghost"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Tutor</button>
+            <button class="btn btn-ghost"><i class="fa-solid fa-layer-group"></i> Flashcards</button>
+          </div>
+        </div>
+        <div class="home-grid">
+          <div class="card stat-card">
+            <span class="stat-value">0</span>
+            <span class="stat-label"><i class="fa-solid fa-list-check"></i> Quizzes Taken</span>
+          </div>
+          <div class="card stat-card">
+            <span class="stat-value">0</span>
+            <span class="stat-label"><i class="fa-solid fa-layer-group"></i> Flashcards</span>
+          </div>
+          <div class="card stat-card">
+            <span class="stat-value">0</span>
+            <span class="stat-label"><i class="fa-solid fa-fire"></i> Day Streak</span>
+          </div>
+          <div class="card stat-card">
+            <span class="stat-value">0</span>
+            <span class="stat-label"><i class="fa-solid fa-star"></i> XP Earned</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-profile" class="view">
+        <div class="empty-state">
+          <i class="fa-solid fa-user"></i>
+          <div class="empty-title">Profile</div>
+          <p>Your profile and achievements will appear here.</p>
+        </div>
+      </section>
+
+      <section id="view-material" class="view">
+        <div class="empty-state">
+          <i class="fa-solid fa-folder-open"></i>
+          <div class="empty-title">My Material</div>
+          <p>Uploaded study material will appear here.</p>
+        </div>
+      </section>
+
+      <section id="view-notes" class="view">
+        <div class="empty-state">
+          <i class="fa-solid fa-note-sticky"></i>
+          <div class="empty-title">My Notes</div>
+          <p>Your saved notes will appear here.</p>
+        </div>
+      </section>
+
+      <section id="view-quiz" class="view">
+        <div class="empty-state">
+          <i class="fa-solid fa-list-check"></i>
+          <div class="empty-title">Create Quiz</div>
+          <p>Generate quizzes from your material with AI.</p>
+        </div>
+      </section>
+
+      <section id="view-flashcards" class="view">
+        <div class="empty-state">
+          <i class="fa-solid fa-layer-group"></i>
+          <div class="empty-title">Flashcards</div>
+          <p>Your flashcard decks will appear here.</p>
+        </div>
+      </section>
+
+      <section id="view-roadmap" class="view">
+        <div class="empty-state">
+          <i class="fa-solid fa-map"></i>
+          <div class="empty-title">Roadmap</div>
+          <p>Your personalized study roadmap will appear here.</p>
+        </div>
+      </section>
+
+      <section id="view-tutor" class="view">
+        <div class="empty-state">
+          <i class="fa-solid fa-robot"></i>
+          <div class="empty-title">AI Tutor</div>
+          <p>Chat with your AI tutor to get instant help.</p>
+        </div>
+      </section>
+
+      <section id="view-summarizer" class="view">
+        <div class="empty-state">
+          <i class="fa-solid fa-file-lines"></i>
+          <div class="empty-title">Summarizer</div>
+          <p>Paste any text and get a clean AI summary.</p>
+        </div>
+      </section>
+
+      <section id="view-mindmap" class="view">
+        <div class="empty-state">
+          <i class="fa-solid fa-diagram-project"></i>
+          <div class="empty-title">Mind Maps</div>
+          <p>Visual mind maps of your study topics will appear here.</p>
+        </div>
+      </section>
+
+      <section id="view-skilltree" class="view">
+        <div class="empty-state">
+          <i class="fa-solid fa-sitemap"></i>
+          <div class="empty-title">Skill Tree</div>
+          <p>Unlock skills as you level up.</p>
+        </div>
+      </section>
+
+      <section id="view-mistakes" class="view">
+        <div class="empty-state">
+          <i class="fa-solid fa-book-open"></i>
+          <div class="empty-title">Mistake Journal</div>
+          <p>Track and review your past mistakes here.</p>
+        </div>
+      </section>
+
+      <section id="view-history" class="view">
+        <div class="empty-state">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          <div class="empty-title">History</div>
+          <p>Your quiz and study history will appear here.</p>
+        </div>
+      </section>
+
+      <section id="view-progress" class="view">
+        <div class="empty-state">
+          <i class="fa-solid fa-chart-line"></i>
+          <div class="empty-title">Progress</div>
+          <p>Charts and heatmaps of your progress will appear here.</p>
+        </div>
+      </section>
+
+      <section id="view-settings" class="view">
+        <div class="empty-state">
+          <i class="fa-solid fa-gear"></i>
+          <div class="empty-title">Settings</div>
+          <p>Manage your preferences here.</p>
+        </div>
+      </section>
+
+    </main>
+
+    <button id="backBtn" class="floating-back" aria-label="Go back">←</button>
+  </div>
+
+  <!-- Mascot -->
+  <div id="mascotContainer"></div>
+
+  <!-- Loader -->
+  <div id="loaderOverlay" class="loader-overlay hidden">
+    <div class="loader-spinner"></div>
+    <p>Loading...</p>
+  </div>
+
+  <!-- Toasts -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Modals -->
+  <div id="modalRoot"></div>
+
+  <!-- Footer -->
+  <footer class="app-footer">developed by medhansh khatri</footer>
+
+  <!-- App entry -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,805 @@
+/* ============================================
+   QuizNova X — Features & polish styles
+   Prompt 6/7: History · Settings · Search ·
+   Mind maps · Skill tree · Summarizer ·
+   Skeleton loaders · error states · responsive
+   ============================================ */
+
+/* ---- Theme-independent variable defaults ---- */
+:root {
+  --mm-edge: #94a3b8;
+}
+
+/* ---- Utility ---- */
+.hidden {
+  display: none !important;
+}
+
+/* ---- Topbar search button ---- */
+.search-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text-main);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: inherit;
+  transition: border-color var(--transition), color var(--transition), background var(--transition);
+}
+
+.search-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--hover-bg);
+}
+
+.search-btn-hint {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.search-btn-kbd {
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  font-size: 0.72rem;
+  font-family: inherit;
+  color: var(--text-muted);
+}
+
+/* ---- Button variants used across features ---- */
+.btn-warning {
+  background: var(--warning);
+  color: #fff;
+}
+
+.btn-warning:hover {
+  filter: brightness(1.08);
+}
+
+.btn-success {
+  background: var(--secondary);
+  color: #fff;
+}
+
+.btn-success:hover {
+  filter: brightness(1.08);
+}
+
+/* ============================================
+   Global search overlay (Ctrl+K)
+   ============================================ */
+
+.search-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.62);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 9990;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 9vh 16px 16px;
+  animation: viewFadeIn 0.15s ease;
+}
+
+.search-panel {
+  width: 100%;
+  max-width: 640px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 24px 70px var(--shadow);
+  overflow: hidden;
+  animation: modalIn 0.18s ease;
+  display: flex;
+  flex-direction: column;
+  max-height: 74vh;
+}
+
+.search-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.search-input-wrap > i {
+  color: var(--text-muted);
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--text-main);
+  font-size: 1rem;
+  font-family: inherit;
+  outline: none;
+  min-height: 0;
+}
+
+.search-input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.75;
+}
+
+.search-kbd {
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  font-size: 0.75rem;
+  font-family: inherit;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.search-results {
+  overflow-y: auto;
+  flex: 1;
+  padding: 8px;
+}
+
+.search-group {
+  margin-bottom: 8px;
+}
+
+.search-group-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.search-item {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  background: transparent;
+  color: var(--text-main);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: background var(--transition);
+}
+
+.search-item:hover,
+.search-item.active {
+  background: var(--hover-bg);
+}
+
+.search-item-icon {
+  color: var(--primary);
+  width: 18px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.search-item-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.search-item-body strong {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.search-item-body span {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.search-item-go {
+  color: var(--text-muted);
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+.search-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 46px 16px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.search-empty i {
+  font-size: 2rem;
+  opacity: 0.5;
+}
+
+.search-footer {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 10px 16px;
+  border-top: 1px solid var(--border);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.search-footer kbd {
+  margin-right: 4px;
+}
+
+/* ============================================
+   Mind maps (SVG canvas)
+   ============================================ */
+
+.mindmap-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.mindmap-canvas-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  min-width: 0;
+}
+
+.mindmap-detail {
+  align-self: start;
+  min-width: 0;
+}
+
+.mindmap-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.mindmap-canvas {
+  width: 100%;
+  height: 520px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  position: relative;
+}
+
+.mindmap-canvas svg {
+  display: block;
+  max-width: none;
+}
+
+.mindmap-hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.mm-bg {
+  fill: var(--bg);
+  stroke: var(--border);
+}
+
+.mm-node rect {
+  fill: var(--card-bg);
+  stroke: var(--border);
+  stroke-width: 1.5;
+  cursor: pointer;
+  transition: stroke 0.15s ease, fill 0.15s ease;
+}
+
+.mm-node.mm-root rect {
+  fill: var(--primary);
+  stroke: var(--primary-hover);
+}
+
+.mm-node.mm-root .mm-node-text {
+  fill: #fff;
+  font-weight: 700;
+}
+
+.mm-node:hover rect {
+  stroke: var(--primary);
+}
+
+.mm-node.mm-selected rect {
+  stroke: var(--secondary);
+  stroke-width: 2.5;
+}
+
+.mm-node-text {
+  fill: var(--text-main);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  pointer-events: none;
+}
+
+.mm-collapse-badge {
+  fill: var(--primary);
+  cursor: pointer;
+  transition: fill 0.15s ease;
+}
+
+.mm-collapse-badge:hover {
+  fill: var(--primary-hover);
+}
+
+.mm-collapse-text {
+  fill: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: inherit;
+  pointer-events: none;
+}
+
+.mm-edge {
+  stroke: var(--mm-edge, #94A3B8);
+}
+
+/* ============================================
+   Skill tree
+   ============================================ */
+
+.st-tree {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.st-chapter {
+  display: flex;
+  align-items: stretch;
+  gap: 16px;
+  position: relative;
+}
+
+.st-chapter-line {
+  width: 3px;
+  flex-shrink: 0;
+  border-radius: 3px;
+  background: var(--border);
+  align-self: stretch;
+}
+
+.st-chapter.completed .st-chapter-line {
+  background: var(--secondary);
+}
+
+.st-chapter.current .st-chapter-line {
+  background: var(--primary);
+}
+
+.st-chapter-node {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card-bg);
+  border: 3px solid var(--border);
+  color: var(--text-muted);
+  margin-top: 10px;
+  transition: all var(--transition);
+}
+
+.st-chapter-node.completed {
+  background: var(--secondary);
+  border-color: var(--secondary);
+  color: #fff;
+}
+
+.st-chapter-node.current {
+  border-color: var(--primary);
+  color: var(--primary);
+  box-shadow: 0 0 0 5px var(--active-bg);
+}
+
+.st-chapter-node.unlocked {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.st-chapter-card {
+  flex: 1;
+  min-width: 0;
+}
+
+.st-skill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-muted);
+  cursor: default;
+}
+
+.st-skill-completed {
+  border-color: var(--secondary);
+  color: var(--secondary);
+  background: var(--success-bg);
+}
+
+.st-skill-current {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--active-bg);
+}
+
+.st-skill-unlocked {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.st-skill-locked {
+  opacity: 0.5;
+}
+
+.st-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.st-dot-completed {
+  background: var(--secondary);
+}
+
+.st-dot-current {
+  background: var(--primary);
+  box-shadow: 0 0 0 3px var(--active-bg);
+}
+
+.st-dot-unlocked {
+  background: var(--primary);
+}
+
+.st-dot-locked {
+  background: var(--border);
+}
+
+.st-legend {
+  align-items: center;
+}
+
+/* ============================================
+   Settings — chips, goal progress, toggles
+   ============================================ */
+
+.chip-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.chip.chip-active {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--active-bg);
+}
+
+.goal-progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.goal-progress-bar {
+  flex: 1;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+.goal-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--secondary), #22C55E);
+  transition: width 0.4s ease;
+}
+
+.goal-progress-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar-option {
+  font-size: 1.4rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform var(--transition), border-color var(--transition), background var(--transition);
+}
+
+.avatar-option:hover {
+  transform: scale(1.08);
+  border-color: var(--primary);
+}
+
+/* ============================================
+   Cards & lists (notes, material, journal)
+   ============================================ */
+
+.note-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 150px;
+}
+
+.material-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.note-editor {
+  display: flex;
+  flex-direction: column;
+}
+
+.challenge-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  cursor: pointer;
+}
+
+.mistake-check,
+.mistake-pick {
+  width: 17px;
+  height: 17px;
+  margin-top: 4px;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+/* ============================================
+   Quiz extras
+   ============================================ */
+
+.quiz-setup {
+  max-width: 880px;
+}
+
+.quiz-source:has(input:checked) {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--active-bg);
+}
+
+.quiz-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.option-letter {
+  display: inline-flex;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  align-items: center;
+  justify-content: center;
+  font-size: 0.76rem;
+  font-weight: 700;
+  margin-right: 10px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.review-card {
+  padding: 14px 16px;
+}
+
+/* ============================================
+   Skeleton loaders (Polish)
+   ============================================ */
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--border);
+  border-radius: 8px;
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.09), transparent);
+  animation: skeletonShimmer 1.4s infinite;
+}
+
+@keyframes skeletonShimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.skeleton-line {
+  height: 12px;
+  margin: 10px 0;
+}
+
+.skeleton-block {
+  height: 80px;
+  border-radius: var(--radius);
+}
+
+.w-20 { width: 20%; }
+.w-30 { width: 30%; }
+.w-40 { width: 40%; }
+.w-50 { width: 50%; }
+.w-60 { width: 60%; }
+.w-70 { width: 70%; }
+.w-80 { width: 80%; }
+.w-90 { width: 90%; }
+.w-100 { width: 100%; }
+
+.skeleton-card {
+  padding: 18px;
+}
+
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 18px;
+}
+
+/* ============================================
+   Error state (Polish)
+   ============================================ */
+
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 50px 20px;
+  text-align: center;
+  color: var(--text-muted);
+  border: 1px dashed var(--danger);
+  border-radius: var(--radius);
+  background: var(--danger-bg);
+}
+
+.error-state i {
+  font-size: 2.6rem;
+  color: var(--danger);
+  opacity: 0.85;
+}
+
+.error-state .error-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--danger);
+}
+
+.error-state p {
+  font-size: 0.85rem;
+  max-width: 420px;
+}
+
+/* ---- Focus visibility (accessibility polish) ---- */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   Responsive (features)
+   ============================================ */
+
+@media (max-width: 900px) {
+  .mindmap-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .mindmap-detail {
+    order: -1;
+  }
+}
+
+@media (max-width: 600px) {
+  .search-panel {
+    max-height: 82vh;
+  }
+
+  .mindmap-canvas {
+    height: 400px;
+  }
+
+  .st-chapter {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .st-chapter-line {
+    display: none;
+  }
+
+  .st-chapter-card {
+    width: 100%;
+  }
+
+  .st-chapter-card .progress-bar {
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  .goal-progress-wrap {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .search-btn-hint,
+  .search-btn-kbd {
+    display: none;
+  }
+
+  .search-btn {
+    width: 40px;
+    height: 40px;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .skeleton-grid {
+    grid-template-columns: 1fr;
+  }
+}

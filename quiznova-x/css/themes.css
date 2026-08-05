@@ -1,0 +1,71 @@
+/* ============================================
+   QuizNova X — Themes
+   Design tokens (dark mode default)
+   ============================================ */
+
+:root {
+  /* Brand palette */
+  --primary: #C8A15A;
+  --primary-hover: #D4AE66;
+  --secondary: #39D98A;
+  --danger: #FF5A6A;
+  --warning: #F6C453;
+
+  /* Dark theme (default) */
+  --bg: #0F1115;
+  --sidebar-bg: #171A21;
+  --card-bg: #1C2028;
+  --text-main: #F5F7FA;
+  --text-muted: #A5ADB8;
+  --border: rgba(255, 255, 255, 0.08);
+  --shadow: rgba(0, 0, 0, 0.25);
+
+  /* Derived tokens */
+  --glass-bg: rgba(23, 26, 33, 0.85);
+  --hover-bg: rgba(200, 161, 90, 0.1);
+  --active-bg: rgba(200, 161, 90, 0.18);
+  --success-bg: rgba(57, 217, 138, 0.12);
+  --danger-bg: rgba(255, 90, 106, 0.12);
+  --warning-bg: rgba(246, 196, 83, 0.12);
+  --info-bg: rgba(200, 161, 90, 0.12);
+
+  --radius: 16px;
+  --radius-sm: 10px;
+  --radius-lg: 20px;
+  --sidebar-width: 260px;
+  --transition: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Light theme */
+[data-theme="light"] {
+  --bg: #F4F6F8;
+  --card-bg: #FFFFFF;
+  --text-main: #111827;
+  --text-muted: #6B7280;
+  --border: rgba(0, 0, 0, 0.08);
+  --shadow: rgba(0, 0, 0, 0.06);
+
+  --sidebar-bg: #FFFFFF;
+  --glass-bg: rgba(255, 255, 255, 0.88);
+  --hover-bg: rgba(200, 161, 90, 0.08);
+  --active-bg: rgba(200, 161, 90, 0.15);
+  --success-bg: rgba(57, 217, 138, 0.12);
+  --danger-bg: rgba(255, 90, 106, 0.1);
+  --warning-bg: rgba(246, 196, 83, 0.12);
+  --info-bg: rgba(200, 161, 90, 0.12);
+}
+
+/* Smooth theme switching */
+body,
+.sidebar,
+.topbar,
+.card,
+.view,
+.input,
+.textarea,
+.select,
+.toast,
+.chip,
+.nav-item {
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
