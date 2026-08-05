@@ -2,32 +2,24 @@
 
 An AI-powered quiz and study platform. Generate quizzes, flashcards, mind maps, roadmaps and more — all from your own study material, powered by Google Gemini.
 
-## Setup
+## Local setup
 
-Make sure you have Node.js installed, then serve the static site:
+Make sure you have Node.js installed, then install dependencies and start the server:
 
 ```bash
-# Install the static server globally (one-time)
-npm install -g serve
-
-# Start the server from inside the project folder
-serve
+npm install
+npm run dev
 ```
 
-The app will be available at the URL printed by `serve` (default `http://localhost:3000`).
+The app is available at `http://localhost:3000`.
 
-## Adding your Gemini API key
+## Gemini configuration
 
-1. Get a free API key from [Google AI Studio](https://aistudio.google.com/apikey).
-2. Open `js/config.js` and replace the placeholder value:
+Production requests run through a server-side Netlify Function and Netlify AI Gateway. Do not add an API key to browser JavaScript or `js/config.js`.
 
-```js
-GEMINI_API_KEY: "your-gemini-api-key-here",
-```
+Netlify injects the required Gemini credentials into the function after the site has a production deploy and AI features are enabled for the project. A manually configured `GEMINI_API_KEY` overrides gateway injection, so remove that environment variable unless it is a direct Google Gemini API key intentionally used for local development.
 
-3. Reload the app. The AI features (AI Tutor, Summarizer, Quiz generation, Mind Maps) will now work.
-
-> Note: This is a static, client-side app, so the key is stored in the browser. Keep the key limited to demo/development use.
+For local Express development only, set a direct Google Gemini API key in the server environment as `GEMINI_API_KEY`. Never commit it to the repository.
 
 ## File structure
 
